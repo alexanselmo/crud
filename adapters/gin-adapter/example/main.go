@@ -67,6 +67,32 @@ var Routes = []crud.Spec{{
 		},
 	},
 }, {
+	Method: "PATCH",
+	Path:   "/widgets",
+	Handler: func(c *gin.Context) {
+		var widget interface{}
+		if err := c.Bind(&widget); err != nil {
+			return
+		}
+		c.JSON(200, widget)
+	},
+	Description: "Adds multiple widgets",
+	Tags:        tags,
+	Validate: crud.Validate{
+		Body: crud.Array().Items(crud.String()),
+	},
+	Responses: map[string]crud.Response{
+		"200": {
+			Schema: crud.JsonSchema{
+				Type: crud.KindObject,
+				Properties: map[string]crud.JsonSchema{
+					"hello": {Type: crud.KindString},
+				},
+			},
+			Description: "OK",
+		},
+	},
+}, {
 	Method: "GET",
 	Path:   "/widgets/{id}",
 	Handler: func(c *gin.Context) {

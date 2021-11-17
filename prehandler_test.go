@@ -639,3 +639,24 @@ func TestUnknown(t *testing.T) {
 		t.Errorf("Expected error")
 	}
 }
+
+func TestIssue_7(t *testing.T) {
+	r := NewRouter("", "", &TestAdapter{})
+	var input interface{}
+	input = map[string]interface{}{}
+
+	field := Array().Items(String())
+
+	err := r.Validate(Validate{Body: field}, nil, input, nil)
+
+	if !errors.Is(err, errWrongType) {
+		t.Errorf("Expected wrong type error, got %s", err)
+	}
+
+	input = []interface{}{1, 2, 3}
+
+	err = r.Validate(Validate{Body: field}, nil, input, nil)
+	if err != nil {
+		t.Errorf("Expected no error, got %s", err)
+	}
+}
